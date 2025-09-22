@@ -1,0 +1,35 @@
+import csv
+def loaddata(filename):
+    with open(filename,'r') as f:
+        reader=csv.reader(f)
+        data=list(reader)
+        header=data[0]
+        instances=data[1:]
+    return header,instances
+def finds(data):
+    for instance in data:
+        if instance[-1].lower()=="yes":
+            hypo=instance[:-1]
+            break
+    else:
+        None
+    for instance in data:
+        if instance[-1].lower()=="yes":
+            for i in range(len(hypo)):
+                if hypo[i]!=instance[i]:
+                    hypo[i]='?'
+    return hypo
+filename='training.csv'
+header,data=loaddata(filename)
+print('attributes',header)
+print(' ')
+print('training data')
+for row in data:
+    print(row)
+hypo=finds(data)
+if hypo:
+    print('most specific hypothesis by find-s')
+    print(hypo)
+else:
+    print('no positive training egs in training data')
+
