@@ -1,0 +1,26 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score,precision_score,recall_score
+data=pd.read_csv('document.csv')
+texts=data['text'].values
+labels=data['label'].values
+vectorizer=CountVectorizer()
+x=vectorizer.fit_transform(texts)
+xtr,xte,ytr,yte=train_test_split(x,labels,test_size=0.3,random_state=42)
+model=MultinomialNB()
+model.fit(xtr,ytr)
+ypred=model.predict(xte)
+accuracy=accuracy_score(yte,ypred)
+precision=precision_score(yte,ypred,pos_label='positive')
+recall=recall_score(yte,ypred,pos_label='positive')
+print("test results:")
+for text,true_label,pred_label in zip(vectorizer.inverse_transform(xte),yte,ypred):
+    print(f"text:{ ' '.join(text) } | true: { true_label } | predicted: { pred_label }")
+print("\nmetrics:")
+print(f"accuracy: {accuracy:.2f}")
+print(f"precision: {precision:.2f}")
+print(f"recall: {recall:.2f}")
+
+
